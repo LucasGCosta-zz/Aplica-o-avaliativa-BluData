@@ -1,0 +1,12 @@
+﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
+// for details on configuring this project to bundle and minify static web assets.
+
+// Write your JavaScript code.
+const appName = 'avaliacao-app',
+      baseUri = 'http://localhost:61136/api/';
+
+(function (angular) {
+
+    angular.module(appName, ['ngResource']);
+
+})(angular);

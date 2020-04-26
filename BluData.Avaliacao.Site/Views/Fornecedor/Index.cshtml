@@ -1,0 +1,141 @@
+﻿@{
+    ViewData["Title"] = "Fornecedores";
+}
+
+    <div ng-controller="fornecedoresController as fornCtrl">
+        <button class="btn btn-primary" data-toggle="modal" data-target="#fornecedorModal" ng-click="new()">
+            <span class="oi oi-plus" title="plus" aria-hidden="true"></span> Novo
+        </button>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Nome</th>
+                    <th scope="col">Documento</th>
+                    <th scope="col">Empresa</th>
+                    <th scope="col">RG</th>
+                    <th scope="col">Data nascimento</th>
+                    <th scope="col">Data cadastro</th>
+                    <th>
+
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <input type="text" class="form-control" ng-model="search.nome" />
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" ng-model="search.cpfCnpj" />
+                    </td>
+                </tr>
+                <tr ng-repeat="fornecedor in fornecedores | filter:search">
+                    <td>
+                        <span>{{fornecedor.nome}}</span>
+                    </td>
+                    <td>
+                        <span>{{fornecedor.cpfCnpj}}</span>
+                    </td>
+                    <td>
+                        <span>{{fornecedor.empresa.nomeFantasia}}</span>
+                    </td>
+                    <td>
+                        <span>{{fornecedor.rg}}</span>
+                    </td>
+                    <td>
+                        <span>{{fornecedor.dataNascimento}}</span>
+                    </td>
+                    <td>
+                        <span>{{fornecedor.dataCadastro}}</span>
+                    </td>
+                    <td>
+                        <button class="btn btn-primary" ng-click="edit(fornecedor)" data-toggle="modal" data-target="#fornecedorModal">
+                            <span class="oi oi-eye" title="eye" aria-hidden="true"></span>
+                        </button>
+                        <button type="button" class="btn btn-danger" ng-click="delete(fornecedor)">
+                            <span class="oi oi-trash" title="trash" aria-hidden="true"></span>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div id="fornecedorModal" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Novo Fornecedor</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Nome</span>
+                            </div>
+                            <input type="text" class="form-control" ng-model="fornecedor.nome" ng-disabled="fornecedor.id > 0" placeholder="Ex: Lucas">
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Documento</span>
+                            </div>
+                            <input type="text" class="form-control" ng-model="fornecedor.cpfCnpj" maxlength="14" ng-disabled="fornecedor.id > 0" placeholder="Cpf Ex: 12345678910">
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Empresa</span>
+                            </div>
+                            <input type="text"class="form-control"ng-show="fornecedor.id > 0" ng-model="fornecedor.empresa.nomeFantasia" disabled/>
+                            <select class="form-control" ng-options="empresa as empresa.nomeFantasia for empresa in empresas track by empresa.id" ng-hide="fornecedor.id > 0" ng-model="fornecedor.empresa"></select>
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">RG</span>
+                            </div>
+                            <input type="text" class="form-control" maxlength="10" ng-model="fornecedor.rg" ng-disabled="fornecedor.cpfCnpj.length != 11 || fornecedor.id > 0" placeholder="Ex: 1234567">
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Data Nascimento</span>
+                            </div>
+                            <input class="form-control" ng-model="fornecedor.dataNascimento" maxlength="10" ng-disabled="fornecedor.cpfCnpj.length != 11 || fornecedor.id > 0" placeholder="dd/MM/yyyy">
+                        </div>
+                        <hr />
+                        <h5>Telefones</h5>
+                        <div class="input-group mb-3" ng-hide="fornecedor.id > 0">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Nº</span>
+                            </div>
+                            <input type="text" class="form-control" ng-model="fornecedor.telefone.numero"  placeholder="Ex: 1234567">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button" ng-click="addTelefone(fornecedor.telefone)" ng-disabled="!fornecedor.telefone">
+                                    <span class="oi oi-plus" title="plus" aria-hidden="true"></span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row" ng-repeat="telefone in fornecedor.telefones">
+                            <div class="col-9">
+                                {{telefone.numero}}
+                            </div>
+                            <div class="col-3">
+                                <button class="btn btn-danger" type="button" ng-hide="fornecedor.id > 0" ng-click="removeTelefone(telefone)" >
+                                    <span class="oi oi-trash" title="trash" aria-hidden="true"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" ng-click="save(fornecedor)">Salvar</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+@section Scripts{
+    <script type="text/javascript" src="~/js/services/empresasService.js"></script>
+    <script type="text/javascript" src="~/js/services/fornecedoresService.js"></script>
+    <script type="text/javascript" src="~/js/controllers/fornecedoresController.js"></script>
+}

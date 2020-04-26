@@ -1,0 +1,65 @@
+﻿@{
+    ViewData["Title"] = "Empresas";
+}
+
+<div ng-controller="empresasController as empCtrl">
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Nome fantasia</th>
+                <th scope="col">UF</th>
+                <th scope="col">CNPJ</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <input class="form-control" ng-model="empresa.nomeFantasia">
+                </td>
+                <td>
+                    <input class="form-control" ng-model="empresa.uf">
+                </td>
+                <td>
+                    <input class="form-control" ng-model="empresa.cnpj">
+                </td>
+                <td>
+                    <button type="button" ng-disabled="!canSave(empresa)" class="btn btn-success" ng-click="save(empresa)">
+                        <span class="oi oi-plus" title="plus" aria-hidden="true"></span>
+                    </button>
+                </td>
+            </tr>
+            <tr ng-repeat="empresa in empresas track by $index">
+                <td>
+                    <input class="form-control" ng-model="empresa.nomeFantasia" ng-show="empresa.editing">
+                    <span ng-hide="empresa.editing">{{empresa.nomeFantasia}}</span>
+                </td>
+                <td>
+                    <input class="form-control" ng-model="empresa.uf" maxlength="2" ng-show="empresa.editing">
+                    <span ng-hide="empresa.editing">{{empresa.uf}}</span>
+                </td>
+                <td>
+                    <input class="form-control" ng-model="empresa.cnpj" maxlength="14" ng-show="empresa.editing" />
+                    <span ng-hide="empresa.editing">{{empresa.cnpj}}</span>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-success" ng-click="allowEdit(empresa)" ng-hide="empresa.editing">
+                        <span class="oi oi-pencil" title="pencil" aria-hidden="true"></span>
+                    </button>
+                    <button type="button" class="btn btn-warning" ng-disabled="!canSave(empresa)" ng-click="update(empresa)" ng-show="empresa.editing">
+                        <span class="oi oi-check" title="check" aria-hidden="true"></span>
+                    </button>
+                    <button type="button" class="btn btn-danger" ng-click="delete(empresa)">
+                        <span class="oi oi-trash" title="trash" aria-hidden="true"></span>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+@section Scripts{
+    <script type="text/javascript" src="~/js/services/empresasService.js"></script>
+    <script type="text/javascript" src="~/js/controllers/empresasController.js"></script>
+}
